@@ -9,20 +9,17 @@ import (
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
-func RegistroRecurso(r recursomodels.Recurso) (string, bool, error) {
+func RegistroTipoRecurso(r recursomodels.TipoRecurso) (string, bool, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 	defer cancel()
 
 	db := bd.MongoCN.Database("Recursos")
-	col := db.Collection("recurso")
+	col := db.Collection("tipoRecurso")
 
-	registro := recursomodels.Recurso{
-		ID:  primitive.NewObjectID(),
-		NombreRecurso: r.NombreRecurso,
-		CantidadExistente: r.CantidadExistente,
-		CantidadDisponible: r.CantidadExistente,
-		Imagen: r.Imagen,
-		TipoID: r.TipoID,
+	registro := recursomodels.TipoRecurso{
+		ID:                 primitive.NewObjectID(),
+		NombreTipo:      r.NombreTipo,
+		DescripcionTipo:  r.DescripcionTipo,
 	}
 
 	result, err := col.InsertOne(ctx, registro)

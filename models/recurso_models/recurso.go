@@ -8,4 +8,5 @@ type Recurso struct {
 	CantidadExistente        int       `bson:"cantidadExistente" json:"cantidadExistente,omitempty"`
 	CantidadDisponible       int       `bson:"cantidadDisponible" json:"cantidadDisponible,omitempty"`
 	Imagen          string       `bson:"imagen" json:"imagen,omitempty"`
+	TipoID primitive.ObjectID `bson:"tipoid,omitempty" json:"tipoid"`
 }

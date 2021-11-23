@@ -14,7 +14,7 @@ func BuscarRecurso(w http.ResponseWriter, r *http.Request) {
 	informacion, err := recursobd.BuscoRecurso(recurso)
 
 	if err != nil {
-		http.Error(w, "Ocurrio un error al buscar un recurso ", 400)
+		http.Error(w, "Ocurrio un error al buscar un recurso "+ err.Error(), 400)
 		return
 	}
 

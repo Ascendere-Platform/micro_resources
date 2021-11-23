@@ -2,6 +2,7 @@ package pedidorouters
 
 import (
 	"encoding/json"
+	"log"
 	"net/http"
 	"time"
 
@@ -21,6 +22,7 @@ func RegistroPedido(w http.ResponseWriter, r *http.Request) {
 	t.Usuario.UsuarioID = objID
 	t.Usuario.Email = routers.Email
 	t.Usuario.Nombre = routers.Nombre
+	t.FechaPedido = time.Now()
 	t.TiempoPedido = t.FechaPedido.Add(time.Hour*120)
 	t.Mensaje = "A TIEMPO PARA ENTREGAR"
 
@@ -34,25 +36,34 @@ func RegistroPedido(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	for _, recurso := range t.Recurso { 
-		recursoEncontrado, disponible, err := pedidobd.ChequeoExistenRecursos(recurso.RecursoID, recurso.CantidadPedida)
+	var nombres []string
 
-		if !disponible {
-			http.Error(w, err, http.StatusBadRequest)
+	for _, recurso := range t.Recurso {
+		if recurso.CantidadPedida < 0 {
+			http.Error(w, "La cantidad pedida no puede ser negativa", 400)
+			return
 		}
-		recurso.NombreRecurso = recursoEncontrado.NombreRecurso
+		nombreRecurso, err, mensaje := pedidobd.ChequeoExistenRecursos(recurso)
+
+		if err != nil {
+			http.Error(w, mensaje + " " + err.Error() + "" + recurso.RecursoID, http.StatusBadRequest)
+			return
+		}
+		nombres = append(nombres, nombreRecurso)
+
+		log.Println(recurso.NombreRecurso)
 	}
 
-	t.FechaPedido = time.Now()
+	for i := 0; i < len(t.Recurso); i++ {
+		t.Recurso[i].NombreRecurso = nombres[i]
+	}
 
-	_, status, err := pedidobd.RegistroPedido(t)
+	log.Println(t)
+	
+
+	status, err := pedidobd.RegistroPedido(t)
 	if err != nil {
-		http.Error(w, "Ocurrio un error al intentar registrar el pedido "+err.Error(), 400)
-		return
-	}
-
-	if !status {
-		http.Error(w, "No se logro insertar el registro del pedido "+err.Error(), 400)
+		http.Error(w, "Ocurrio un error al intentar registrar el pedido: "+ status + " "+err.Error(), 400)
 		return
 	}
 

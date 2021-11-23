@@ -9,33 +9,33 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func ListoRecursos() ([]*recursomodels.DevuelvoRecurso, bool) {
+func ListoRecursos() ([]*recursomodels.Recurso, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15)
 	defer cancel()
 
 	db := bd.MongoCN.Database("Recursos")
 	col := db.Collection("recurso")
 
-	var results []*recursomodels.DevuelvoRecurso
+	var resultadoRecurso []*recursomodels.Recurso
 
-	condiciones := make([]bson.M,0)
+	query := bson.M{}
 
-	condiciones = append(condiciones, bson.M{})
-	condiciones = append(condiciones, bson.M{
-		"lookup": bson.M{
-			"from":         "tipoRecurso",
-			"localField":   "tipoid",
-			"foreignField": "_id",
-			"as":           "tipo",
-		}})
-	condiciones = append(condiciones,  bson.M{"$unwind": "$asignatura"})
-
-	cursor, err := col.Aggregate(ctx, condiciones)
-
-	err = cursor.All(ctx, &results)
-
-	if err != nil{
-		return results, false
+	cur, err := col.Find(ctx, query)
+	if err != nil {
+		return resultadoRecurso, err
 	}
-	return results, true
+
+	for cur.Next(ctx) {
+		var s recursomodels.Recurso
+		err := cur.Decode(&s)
+		if err != nil {
+			return resultadoRecurso, err
+		}
+		resultadoRecurso = append(resultadoRecurso, &s)
+	}
+
+	if err != nil {
+		return resultadoRecurso, err
+	}
+	return resultadoRecurso, err
 }

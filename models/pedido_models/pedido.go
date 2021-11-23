@@ -16,12 +16,8 @@ type Pedido struct {
 	InformeDevolucion string             `bson:"informeDevolucion" json:"informeDevolucion,omitempty"`
 	Estado            bool               `bson:"estado" json:"estado,omitempty"`
 	Mensaje           string             `bson:"mensaje" json:"mensaje,omitempty"`
-	Recurso           []struct {
-		RecursoID      primitive.ObjectID `bson:"recursoid,omitempty" json:"recursoid"`
-		NombreRecurso  string             `bson:"nombreRecurso" json:"nombreRecurso,omitempty"`
-		CantidadPedida int                `bson:"cantidadpedida" json:"cantidadpedida,omitempty"`
-	}
-	Usuario struct {
+	Recurso           []RecursoPedido    `bson:"recurso" json:"recurso,omitempty"`
+	Usuario           struct {
 		UsuarioID primitive.ObjectID `bson:"usuarioid,omitempty" json:"usuarioid"`
 		Email     string             `bson:"email,omitempty" json:"email"`
 		Nombre    string             `bson:"nombre,omitempty" json:"nombre"`

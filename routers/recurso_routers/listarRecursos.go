@@ -9,9 +9,9 @@ import (
 
 func ListarRecursos(w http.ResponseWriter, r *http.Request) {
 
-	result, status := recursobd.ListoRecursos()
-	if !status {
-		http.Error(w, "Error al leer los recursos", http.StatusBadRequest)
+	result, err := recursobd.ListoRecursos()
+	if err != nil {
+		http.Error(w, "Error al leer los recursos " + err.Error(), http.StatusBadRequest)
 		return
 	}
 	w.Header().Set("Content-Type", "application/json")

@@ -11,7 +11,7 @@ func BuscarTipoRecurso(w http.ResponseWriter, r *http.Request) {
 
 	tipo := r.URL.Query().Get("tipo")
 
-	informacion, err := recursobd.BuscoRecurso(tipo)
+	informacion, err := recursobd.BuscoTipoRecurso(tipo)
 
 	if err != nil {
 		http.Error(w, "Ocurrio un error al buscar un tipo de recurso ", 400)

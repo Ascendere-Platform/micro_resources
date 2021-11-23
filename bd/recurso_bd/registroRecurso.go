@@ -22,6 +22,7 @@ func RegistroRecurso(r recursomodels.Recurso) (string, bool, error) {
 		CantidadExistente: r.CantidadExistente,
 		CantidadDisponible: r.CantidadExistente,
 		Imagen: r.Imagen,
+		TipoID: r.TipoID,
 	}
 
 	result, err := col.InsertOne(ctx, registro)

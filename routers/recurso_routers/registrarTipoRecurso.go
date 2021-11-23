@@ -8,25 +8,25 @@ import (
 	recursomodels "github.com/ascendere/resources/models/recurso_models"
 )
 
-func RegistroRecurso(w http.ResponseWriter, r *http.Request){
-	var recurso recursomodels.Recurso
+func RegistrarTipoRecurso(w http.ResponseWriter, r *http.Request){
+	var tipo recursomodels.TipoRecurso
 
-	err := json.NewDecoder(r.Body).Decode(&recurso)
+	err := json.NewDecoder(r.Body).Decode(&tipo)
 
 	if err != nil {
 		http.Error(w, "Error en los datos recibidos "+ err.Error(),400)
 		return
 	}
 
-	_, status, err := recursobd.RegistroRecurso(recurso)
+	_, status, err := recursobd.RegistroTipoRecurso(tipo)
 
 	if err != nil {
-		http.Error(w, "Ocurrio un error al insertar un nuevo Recurso", http.StatusBadRequest)
+		http.Error(w, "Ocurrio un error al insertar un nuevo Tipo", http.StatusBadRequest)
 		return
 	}
 
 	if !status {
-		http.Error(w, "No se ha logaro registrar un nuevo Recurso", http.StatusBadRequest)
+		http.Error(w, "No se ha logaro registrar un nuevo Tipo", http.StatusBadRequest)
 		return
 	}
 

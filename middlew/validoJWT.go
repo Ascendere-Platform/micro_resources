@@ -12,6 +12,7 @@ func ValidoJWT(next http.HandlerFunc) http.HandlerFunc {
 
 		if err != nil {
 			http.Error(w, "Error en el token"+err.Error(), http.StatusBadRequest)
+			return
 		}
 		next.ServeHTTP(w, r)
 	}

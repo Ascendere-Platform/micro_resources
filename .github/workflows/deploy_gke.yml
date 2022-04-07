@@ -34,8 +34,8 @@ jobs:
         with:
           context: .
           push: true
-          tags: '${{ secrets.DOCKER_USERNAME }}/micro_resources'
-
+          tags: '${{ secrets.DOCKER_USERNAME }}/micro_users'
+          
   setup-and-deploy:
     name: Setup and Deploy
     needs: push_to_registry
@@ -59,7 +59,6 @@ jobs:
     # Deploy the Docker image to the GKE cluster
     - name: Deploy
       run: |-
-        # kustomize edit set image ${{ secrets.DOCKER_USERNAME }}/micro_resources
         kustomize build . | kubectl apply -f -
         kubectl patch deployment $DEPLOYMENT_NAME -p "{\"spec\":{\"template\":{\"metadata\":{\"labels\":{\"date\":\"`date +'%s'`\"}}}}}"
         kubectl rollout status deployment/$DEPLOYMENT_NAME
